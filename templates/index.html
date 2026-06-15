@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+ <title>Home-Task tracker</title>
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+ <link rel="stylesheet" href="../static/styles.css">
+ <meta charset="utf-8">
+ <meta name = "viewport" content = "width = device-width , initial-scale = 1.0">
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  function updateStats() {
+    let tasks = document.querySelectorAll("#taskList input");
+    let done = 0;
+
+    tasks.forEach(task => {
+      if (task.checked) done++;
+    });
+
+    let total = tasks.length;
+    let pending = total - done;
+
+    document.getElementById("done").innerText = done;
+    document.getElementById("pending").innerText = pending;
+
+    let productivity = 0;
+
+    if (total > 0) {
+      productivity = Math.round((done / total) * 100);
+    }
+
+    document.getElementById("productivity").innerText = productivity + "%";
+
+    let bar = document.getElementById("progressBar");
+    bar.style.width = productivity + "%";
+    bar.innerText = productivity + "%";
+  }
+
+  window.updateStats = updateStats;
+
+  updateStats();
+
+});
+</script>
+ </head>
+
+<body>
+ <div class="d-flex">
+
+  <div class="bg-dark text-white p-3" style="width: 250px; min-height: 100vh;">
+    <h4>Menu</h4>
+    <ul class="nav flex-column mt-4">
+      <li class="nav-item"><a href="/" class="nav-link text-white">Home</a></li>
+      <li class="nav-item"><a href="/about" class="nav-link text-white">About</a></li>
+      <li class="nav-item"><a href="/goal" class="nav-link text-white">Goal</a></li>
+    </ul>
+  </div>
+
+  <div class="flex-grow-1 p-4">
+
+    <div class="d-flex justify-content-between mb-4">
+      <h3>Dashboard</h3>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-md-3"><div class="card p-3">Tasks Done <h2 id="done">0</h2></div></div>
+      <div class="col-md-3"><div class="card p-3">Pending <h2 id="pending">6</h2> </div></div>
+      <div class="col-md-3"><div class="card p-3">Progress<h2 id="productivity">0%</h2></div></div>
+    </div>
+
+
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="card p-3">
+          <h5>Tasks</h5>
+           <form method="POST" action="/add" class="mb-3 d-flex">
+          <input type="text" name="task" class="form-control me-2" placeholder="Enter new task" required>
+          <button class="btn btn-primary">Add</button>
+          </form>
+          <ul id = "taskList" class = "list-group">
+             {% for task in tasks %}
+            <li class="list-group-item d-flex justify-content-between align-items-center"><input type="checkbox" onchange="updateStats()">{{task[1]}}  <a href="/delete/{{ task[0] }}" class="btn btn-danger btn-sm">
+        x
+      </a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+
+      <div class="col-md-6">
+        <div class="card p-3">
+          <h5>Progress Bar</h5>
+          <div class="progress mb-2">
+            <div class="progress-bar" style="width: 0%" id = "progressBar">0%</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="card p-3">
+      <h5>Weekly Schedule</h5>
+      <table class="table table-striped table-bordered">
+        <tr>
+          <th>Day</th><th>Task</th><th>Action</th>
+        </tr>
+  {% for row in schedule %}
+    <tr>
+     <td>{{ row[1] }}</td> 
+     <td>{{ row[2] }}</td>  
+     <td>
+      <form method="POST" action="/update_schedule/{{ row[0] }}" class="d-flex">
+      <input type="text" name="updated_task" placeholder="Edit task" class="form-control me-2">
+      <button class="btn btn-primary btn-sm">Update</button>
+    </form>
+     </td> 
+  </tr>
+  {% endfor %}
+      </table>
+    </div>
+
+
+  </div>
+
+</div>
+
+</body>
+
+</html>

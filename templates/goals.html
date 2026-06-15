@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Goal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../static/styles.css">
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+
+    function saveGoal() {
+      let goal = document.getElementById("goalInput").value;
+
+      if (goal.trim() !== "") {
+        localStorage.setItem("goal", goal);
+        displayGoal();
+      }
+    }
+
+    function displayGoal() {
+      let goal = localStorage.getItem("goal");
+
+      if (goal) {
+        document.getElementById("goalText").innerText = goal;
+      }
+    }
+
+    window.saveGoal = saveGoal;
+
+    displayGoal();
+
+  });
+  </script>
+
+</head>
+
+<body>
+    <div class = "d-flex">
+     <div class="bg-dark text-white p-3" style="width: 250px; min-height: 100vh;">
+    <h4>Menu</h4>
+    <ul class="nav flex-column mt-4">
+      <li class="nav-item"><a href="/" class="nav-link text-white">Home</a></li>
+      <li class="nav-item"><a href="/about" class="nav-link text-white">About</a></li>
+      <li class="nav-item"><a href="/goal" class="nav-link text-white">Goal</a></li>
+    </ul>
+  </div>
+
+  <div class="flex-grow-1 p-4">
+<h3>Set Your Goal</h3> 
+
+<div class = "card p-4 mt-3">
+
+  <input type="text" id="goalInput" class="form-control" placeholder="Enter your goal">
+
+  <button class="btn btn-primary mt-3" onclick="saveGoal()">Save Goal</button>
+
+  <hr>
+
+  <h5>Your Current Goal:</h5>
+  <p id="goalText">No goal set</p>
+
+</div>
+</div>
+
+</div>
+
+</body>
+</html>
